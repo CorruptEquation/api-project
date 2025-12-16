@@ -16,10 +16,11 @@ router.post("/api/auth", async (req, res) => {
     if (!["signup", "login"].includes(mode)) return res.sendStatus(400);
     // TODO: Email and pw format validity (client should handle bad formats before sending the request on login/signup. On login, the error message should just say that all account creds are incorrect (400) if at least one invalid format is present. Formats need to be specified in API docs).
 
-    // TODO: Implement refresh tokens
+    // TODO: Implement refresh tokens and rotation
     // TODO: Implement API tokens
     // TODO: Move database queries
     // TODO: Promisify queries
+    // TODO: Send JSON message with status codes
 
     const encryptedEmail = encryptDeterministic(email);
     const user = await new Promise((response, rej) => {
@@ -36,8 +37,8 @@ router.post("/api/auth", async (req, res) => {
 
       await new Promise((response, rej) => {
         db.run(
-        "INSERT INTO users (email, password, APIToken) VALUES (?, ?, ?)",
-        [encryptedEmail, hashPw, null],
+        "INSERT INTO users (email, password) VALUES (?, ?)",
+        [encryptedEmail, hashPw],
         e => { e? rej(e) : response() }
       );
       });
@@ -45,6 +46,9 @@ router.post("/api/auth", async (req, res) => {
       res.status(201); // Created
     } else {
       // Login
+
+      // TODO: Send API token if exists 
+
       if (!user) return res.sendStatus(400); // No account
 
       const validPw = await bcrypt.compare(password, user.password);
@@ -52,14 +56,8 @@ router.post("/api/auth", async (req, res) => {
 
       res.status(200); // OK
     }
-    const accessToken = genAccessToken(email);
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * process.env.ACCESS_TOKEN_EXP_MIN,
-      path: "/",
-      secure: process.env.NODE_ENV === "production", // HTTP localhost
-      sameSite: "none" // different localhost ports for frontend and backend 
-    });
+    const accessToken = genAccessToken(encryptedEmail);
+    res.json({ accessToken: accessToken });
     return res.send();
   } catch (err) {
     console.log(err);
@@ -71,9 +69,7 @@ router.post("/api/auth", async (req, res) => {
 router.patch("/api/logout", authSessionToken, (_, res) => {
   return res
     .status(200)
-    .clearCookie("sessionToken")
-    .clearCookie("isLoggedIn")
-    .clearCookie("usrEmail")
+    
     .end();
 });
  */
