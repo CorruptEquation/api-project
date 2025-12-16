@@ -22,7 +22,7 @@ router.post("/api/auth", async (req, res) => {
     // TODO: Promisify queries
     // TODO: Send JSON message with status codes
 
-    const encryptedEmail = encryptDeterministic(email);
+    const encryptedEmail = encryptDeterministic(email, "email");
     const user = await new Promise((response, rej) => {
       db.get("SELECT * FROM users WHERE email=?", [encryptedEmail], (e, row) => { 
         if (e) rej(e);
