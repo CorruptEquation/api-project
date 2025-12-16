@@ -7,7 +7,8 @@ import { decryptDeterministic, encryptDeterministic } from "../utils/aesMethods.
 
 export const router = express.Router();
 
-router.get("/api/get-apitoken", authAccessToken, async (req, res) => {
+// Get API Token
+router.get("/api/apitoken", authAccessToken, async (req, res) => {
   // TRY-CATCH
   const encryptedEmail = req.user.encryptedEmail;
   const {APIToken: encryptedAPIToken} = await new Promise ((response, rej) => {
@@ -24,7 +25,8 @@ router.get("/api/get-apitoken", authAccessToken, async (req, res) => {
     .json({APIToken: decryptedAPIToken});
 });
 
-router.patch("/api/gen-apitoken", authAccessToken, async (req, res) => {
+// Generate API Token
+router.patch("/api/apitoken", authAccessToken, async (req, res) => {
   // TRY-CATCH
   const encryptedEmail = req.user.encryptedEmail;
   const APIToken = crypto.randomBytes(32).toString("hex");
