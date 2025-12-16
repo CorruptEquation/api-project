@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { db } from "../database.js";
 import { genAccessToken } from "../utils/jwtMethods.js";
 import { encryptDeterministic } from "../utils/aesMethods.js";
+import { getAPIToken } from "../utils/apiTokenMethods.js"
 
 export const router = express.Router();
 
@@ -11,13 +12,14 @@ export const router = express.Router();
 router.post("/api/auth", async (req, res) => {
   try {
     const { email, password, mode } = req.body;
+    const resJsonObj = {};
 
     // Bad requests
     if (!["signup", "login"].includes(mode)) return res.sendStatus(400);
     // TODO: Email and pw format validity (client should handle bad formats before sending the request on login/signup. On login, the error message should just say that all account creds are incorrect (400) if at least one invalid format is present. Formats need to be specified in API docs).
 
     // TODO: Implement refresh tokens and rotation
-    // TODO: Implement API tokens
+    // TODO: Implement API tokens verification to access posts
     // TODO: Move database queries
     // TODO: Promisify queries
     // TODO: Send JSON message with status codes
@@ -30,7 +32,7 @@ router.post("/api/auth", async (req, res) => {
       });
     });
 
-    if (mode == "signup") {
+    if (mode === "signup") {
       if (user) return res.sendStatus(409); // Conflict
 
       const hashPw = await bcrypt.hash(password, 12);
@@ -44,20 +46,20 @@ router.post("/api/auth", async (req, res) => {
       });
       
       res.status(201); // Created
-    } else {
-      // Login
-
-      // TODO: Send API token if exists 
-
+    } else if (mode === "login") {
       if (!user) return res.sendStatus(400); // No account
 
       const validPw = await bcrypt.compare(password, user.password);
       if (!validPw) return res.sendStatus(400); // Wrong creds
+      
+      const APIToken = await getAPIToken(encryptedEmail);
+      if(APIToken) resJsonObj.APIToken = APIToken;
 
       res.status(200); // OK
     }
     const accessToken = genAccessToken(encryptedEmail);
-    res.json({ accessToken: accessToken });
+    resJsonObj.accessToken = accessToken;
+    res.json(resJsonObj);
     return res.send();
   } catch (err) {
     console.log(err);

@@ -3,7 +3,8 @@ import crypto from "crypto";
 
 import { db } from "../database.js";
 import { authAccessToken } from "../middleware/middleware.js";
-import { decryptDeterministic, encryptDeterministic } from "../utils/aesMethods.js"
+import { encryptDeterministic } from "../utils/aesMethods.js"
+import { getAPIToken } from "../utils/apiTokenMethods.js"
 
 export const router = express.Router();
 
@@ -11,18 +12,11 @@ export const router = express.Router();
 router.get("/api/apitoken", authAccessToken, async (req, res) => {
   // TRY-CATCH
   const encryptedEmail = req.user.encryptedEmail;
-  const {APIToken: encryptedAPIToken} = await new Promise ((response, rej) => {
-    db.get("SELECT APIToken FROM users WHERE email=?", [encryptedEmail], (e, row) => {
-        if (e) rej(e);
-        response(row);
-      }
-    );
-  });
-  const decryptedAPIToken = encryptedAPIToken && decryptDeterministic(encryptedAPIToken, "apiToken");
+  const APIToken = await getAPIToken(encryptedEmail);
+  
+  res.json(APIToken ? {APIToken: APIToken} : {message: "You don't have an API token generated."})
 
-  return res
-    .status(200)
-    .json({APIToken: decryptedAPIToken});
+  return res.status(200).send();
 });
 
 // Generate API Token
