@@ -12,7 +12,7 @@
 **POST:** Logs/Signs-up the user. Returns access token<br>
 **Required parameters:** email, password, mode("login"/"signup")<br>
 
-### Get/Generate API token *(/api/apitoken)*
+### Get/Generate API token *(/api/apitk)*
 **GET:** Returns API token<br>
 **Required headers:** authorization(Bearer \<access_token>)<br>
 **PATCH:** Generate/Regenerate API token, returns status code<br>
@@ -23,7 +23,7 @@
 ## Thought process
 - Client sends request (/api/auth) for authentication
     - Fetch possible user account
-        - Check mode
+        - Check mode (mode would not be necessary if endpoints are separated)
             - Signup
                 - User already exists
                     <br>? Return status 409
@@ -36,7 +36,7 @@
                     <br>? Return status 404
                     <br>:
                         <br>- Compare creds hashes. Return 401 if not valid
-                        <br>- Send access token if exists
+                        <br>- Send API token if exists
                         <br>- Send status 200
             - Send JWT
 
@@ -44,8 +44,7 @@
     - Sends request to generate API token (Client warned user if exists)
         - Access JWT expired
         <br>?
-            <br>- Logout
-            <br>- Rotate refresh token
+            <br>- Logout, delete refresh token from cache
         <br>: Generate and send new API token
 
     - Sends request to get posts
