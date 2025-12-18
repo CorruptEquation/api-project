@@ -1,8 +1,8 @@
 import express from "express";
 import bcrypt from "bcrypt";
 
-import { db } from "../database.js";
-import { genAccessToken } from "../utils/jwtMethods.js";
+import { dbGetUser, dbInsertUser } from "../database/dbMethods.js";
+import { genAccessToken, genRefreshToken } from "../utils/jwtMethods.js";
 import { encryptDeterministic } from "../utils/aesMethods.js";
 import { getAPIToken } from "../utils/apiTokenMethods.js"
 
@@ -20,30 +20,17 @@ router.post("/api/auth", async (req, res) => {
 
     // TODO: Implement refresh tokens and rotation
     // TODO: Implement API tokens verification to access posts
-    // TODO: Move database queries
-    // TODO: Promisify queries
     // TODO: Send JSON message with status codes
 
     const encryptedEmail = encryptDeterministic(email, "email");
-    const user = await new Promise((response, rej) => {
-      db.get("SELECT * FROM users WHERE email=?", [encryptedEmail], (e, row) => { 
-        if (e) rej(e);
-        else response(row);
-      });
-    });
+    const user = await dbGetUser(encryptedEmail);
 
     if (mode === "signup") {
       if (user) return res.sendStatus(409); // Conflict
 
       const hashPw = await bcrypt.hash(password, 12);
 
-      await new Promise((response, rej) => {
-        db.run(
-        "INSERT INTO users (email, password) VALUES (?, ?)",
-        [encryptedEmail, hashPw],
-        e => { e? rej(e) : response() }
-      );
-      });
+      await dbInsertUser([encryptedEmail, hashPw]);
       
       res.status(201); // Created
     } else if (mode === "login") {
@@ -57,8 +44,8 @@ router.post("/api/auth", async (req, res) => {
 
       res.status(200); // OK
     }
-    const accessToken = genAccessToken(encryptedEmail);
-    resJsonObj.accessToken = accessToken;
+    resJsonObj.accessToken = genAccessToken(encryptedEmail);
+    resJsonObj.refreshToken = genRefreshToken(encryptedEmail);
     res.json(resJsonObj);
     return res.send();
   } catch (err) {

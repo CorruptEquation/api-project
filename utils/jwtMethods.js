@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
-export function genRefreshToken(email) {
-  return jwt.sign({ email: email }, process.env.REFRESH_TOKEN_SECRET);
+export function genRefreshToken(encryptedEmail) {
+  return jwt.sign({ encryptedEmail: encryptedEmail }, process.env.REFRESH_TOKEN_SECRET);
 }
 
 export function genAccessToken(encryptedEmail) {
