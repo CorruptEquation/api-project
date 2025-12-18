@@ -9,7 +9,7 @@ import { router as APITokenRouter } from "./routes/APItoken.js"
 import { dbInit } from "./database/dbMethods.js"; 
 
 // Init db
-dbInit();
+try { await dbInit(); } catch(e) { console.log(e); }
 
 // Setup express server
 const app = express();
