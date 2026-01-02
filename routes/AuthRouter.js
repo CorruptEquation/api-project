@@ -5,6 +5,7 @@ import { dbGetUser, dbInsertUser } from "../database/dbMethods.js";
 import { genAccessToken, genRefreshToken } from "../utils/jwtMethods.js";
 import { encryptDeterministic } from "../utils/aesMethods.js";
 import { getAPIToken } from "../utils/apiTokenMethods.js"
+import { redis } from "../redis.js";
 
 export const router = express.Router();
 
@@ -26,6 +27,7 @@ router.post("/api/auth", async (req, res) => {
     const user = await dbGetUser(encryptedEmail);
 
     if (mode === "signup") {
+      await redis.set("name", "gg")
       if (user) return res.sendStatus(409); // Conflict
 
       const hashPw = await bcrypt.hash(password, 12);
@@ -34,6 +36,8 @@ router.post("/api/auth", async (req, res) => {
       
       res.status(201); // Created
     } else if (mode === "login") {
+      const value = await redis.get("name");
+      console.log(value);
       if (!user) return res.sendStatus(400); // No account
 
       const validPw = await bcrypt.compare(password, user.password);

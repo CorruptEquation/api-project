@@ -18,6 +18,14 @@
 **PATCH:** Generate/Regenerate API token, returns status code<br>
 **Required headers:** authorization(Bearer \<access_token>)<br>
 
+## How to run
+### Docker
+Development: `docker-compose -f docker-compose.yaml -f docker-compose-dev.yaml up --build`
+Production: `docker-compose -f docker-compose.yaml -f docker-compose-prod.yaml up --build`
+
+### npm
+Development: `npm run dev`
+Production: `npm start`
 
 
 ## Thought process

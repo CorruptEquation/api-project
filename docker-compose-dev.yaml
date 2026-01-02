@@ -5,9 +5,12 @@ services:
       context: .
       args:
         NODE_ENV: development
+    ports:
+      - "9229:9229"
     volumes:
       - ./:/app:cached
       - /app/node_modules
     environment:
       - NODE_ENV=development
-    command: npm run dev
+    # command: npm run dev
+    command: npm run debug
