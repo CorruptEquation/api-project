@@ -1,0 +1,14 @@
+# Git
+.git
+.gitignore
+README.md
+
+# Node
+node_modules
+
+# .env
+
+# Docker
+Dockerfile
+docker-compose*
+.dockerignore

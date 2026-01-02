@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-// Could TODO: add integrity (MAC), use AES-SIV (RFC 5297)
+// TODO?: add integrity (MAC), use AES-SIV (RFC 5297)
 
 const alg = "aes-256-ctr";
 const IV = Buffer.alloc(16, 0);

@@ -54,6 +54,7 @@ router.post("/api/auth", async (req, res) => {
   }
 });
 
+// TODO: Logout route
 /* // Logout
 router.patch("/api/logout", authSessionToken, (_, res) => {
   return res

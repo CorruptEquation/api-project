@@ -1,4 +1,1 @@
-node_modules
-package-lock.json
-database.db
-# .env
+database/dbLogs.js

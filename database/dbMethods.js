@@ -6,6 +6,7 @@ sqlite3.verbose();
 const dbName = process.env.DB_PATH;
 
 // Promisifying methods
+
 function dbRun({db, sql, initMsg = undefined, params = []}) {
   return new Promise((resolve, rej) => {
       db.run(
@@ -48,6 +49,8 @@ function useDb(callback) {
     });
   };
 }
+
+// Callbacks
 
 export const dbInit = useDb(async ({db}) => {
   console.log("Connected to database");

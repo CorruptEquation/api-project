@@ -4,16 +4,18 @@ import express from "express";
 import cors from "cors";
 
 // Import routes
-import { router as authRouter } from "./routes/auth.js";
-import { router as APITokenRouter } from "./routes/APItoken.js"
+import { router as authRouter } from "./routes/AuthRouter.js";
+import { router as APITokenRouter } from "./routes/APITkRouter.js"
 import { dbInit } from "./database/dbMethods.js"; 
 
 // Init db
-try { await dbInit(); } catch(e) { console.log(e); }
+try { 
+  await dbInit();
+} catch(e) { console.log(e); }
 
 // Setup express server
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Import middlewares into express
 app.use(cors({ origin: true, credentials: true }));
