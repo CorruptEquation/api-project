@@ -20,7 +20,7 @@
 
 ## How to run
 ### Docker
-Development: `docker-compose -f docker-compose.yaml -f docker-compose-dev.yaml up --build`
+Development: `docker-compose -f docker-compose.yaml -f docker-compose-dev.yaml up --build`<br>
 Production: `docker-compose -f docker-compose.yaml -f docker-compose-prod.yaml up --build`
 
 ### npm

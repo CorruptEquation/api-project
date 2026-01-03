@@ -4,8 +4,11 @@ import crypto from "crypto";
 
 // Get decrypted API token
 export async function getAPIToken(encryptedEmail) {
-  const {APIToken: encryptedAPIToken} = await dbGetAPITk(encryptedEmail);
-  return encryptedAPIToken && decryptDeterministic(encryptedAPIToken, "apiToken");
+  const queryRes = await dbGetAPITk(encryptedEmail); // User maybe deleted from db
+  if(queryRes) { 
+    const {APIToken: encryptedAPIToken} = queryRes;
+    return encryptedAPIToken && decryptDeterministic(encryptedAPIToken, "apiToken");
+  } else return undefined;
 }
 
 export function genEncryptedAPItk() {
