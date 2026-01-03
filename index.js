@@ -6,6 +6,7 @@ import cors from "cors";
 // Import routes
 import { router as authRouter } from "./routes/AuthRouter.js";
 import { router as APITokenRouter } from "./routes/APITkRouter.js"
+import { router as accessTkRouter } from './routes/AccessTkRouter.js';
 import { dbInit } from "./database/dbMethods.js"; 
 
 // Init db
@@ -24,6 +25,7 @@ app.use(express.json());
 // Setup all routes
 app.use(authRouter);
 app.use(APITokenRouter);
+app.use(accessTkRouter);
 
 // Start server
 app.listen(port, () => {
