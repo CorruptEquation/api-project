@@ -7,4 +7,16 @@ services:
         NODE_ENV: production
     environment:
     - NODE_ENV=production
+    volumes:
+      - sqlite-data:/app/database/database
     command: npm start
+
+  redis-cache:
+    image: redis:alpine
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+
+volumes:
+  redis-data:
+  sqlite-data:
