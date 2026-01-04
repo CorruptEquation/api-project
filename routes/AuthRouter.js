@@ -62,23 +62,33 @@ router.post("/api/auth", async (req, res) => {
 
 // Logout
 router.delete("/api/logout", async (req, res) => {
-  const refreshTk = req.body.token;
-  if (!refreshTk) return res.sendStatus(400);
+  try {
+    const refreshTk = req.body.token;
+    if (!refreshTk) return res.sendStatus(400);
 
-  await redis.del(refreshTk);
-  
-  return res.sendStatus(200);
+    await redis.del(refreshTk);
+    
+    return res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 }); 
 
-// TODO: Delete account
+// Delete account
 router.delete("/api/account", async (req, res) => {
-  const refreshTk = req.body.token;
-  if (!refreshTk) return res.sendStatus(400);
+  try {
+    const refreshTk = req.body.token;
+    if (!refreshTk) return res.sendStatus(400);
 
-  await redis.del(refreshTk);
+    await redis.del(refreshTk);
 
-  try{ dbRemUser(verifyRefreshTk(refreshTk)); }
-  catch(e) { return }
+    try{ dbRemUser(verifyRefreshTk(refreshTk)); }
+    catch(e) { return }
 
-  return res.sendStatus(200);
+    return res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 })
