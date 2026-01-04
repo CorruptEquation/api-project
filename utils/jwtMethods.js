@@ -9,3 +9,7 @@ export function genAccessToken(encryptedEmail) {
     expiresIn: `${process.env.ACCESS_TOKEN_EXP_MIN}m`,
   });
 }
+
+export function verifyRefreshTk(refreshTk) {
+  return jwt.verify(refreshTk, process.env.REFRESH_TOKEN_SECRET).encryptedEmail;
+}

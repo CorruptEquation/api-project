@@ -14,3 +14,7 @@ services:
       - NODE_ENV=development
     # command: npm run dev
     command: npm run debug
+
+  redis-cache:
+    ports:
+    - "6379:6379"

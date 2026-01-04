@@ -1,5 +1,5 @@
 import sqlite3 from "sqlite3";
-import { initRecipesSQL, initUsersSQL, getUserSQL, insertUserSQL, getAPITkSQL, UpdateAPITkSQL } from "./dbQueries.js";
+import { initRecipesSQL, initUsersSQL, getUserSQL, insertUserSQL, getAPITkSQL, UpdateAPITkSQL, deleteUserSQL } from "./dbQueries.js";
 
 sqlite3.verbose();
 
@@ -7,7 +7,7 @@ const dbName = process.env.DB_PATH;
 
 // Promisifying methods
 
-function dbRun({db, sql, initMsg = undefined, params = []}) {
+function dbRun({db, sql, msg = undefined, params = []}) {
   return new Promise((resolve, rej) => {
       db.run(
         sql,
@@ -15,7 +15,7 @@ function dbRun({db, sql, initMsg = undefined, params = []}) {
         (e) => {
           if (e) rej(e);
           else {
-            initMsg && console.log(initMsg);
+            msg && console.log(msg);
             resolve();
           };
         }
@@ -55,12 +55,13 @@ function useDb(callback) {
 export const dbInit = useDb(async ({db}) => {
   console.log("Connected to database");
 
-  await dbRun({db, sql:initRecipesSQL, initMsg:"Table recipes created or existed"});
+  await dbRun({db, sql:initRecipesSQL, msg:"Table recipes created or existed"});
   
-  await dbRun({db, sql:initUsersSQL, initMsg:"Table users created or existed"});
+  await dbRun({db, sql:initUsersSQL, msg:"Table users created or existed"});
 });
 
 export const dbGetUser = useDb(async ({db, params}) => await dbGet({db, sql:getUserSQL, params}));
 export const dbInsertUser = useDb(async ({db, params}) => await dbRun({db, sql:insertUserSQL, params}));
 export const dbGetAPITk = useDb(async ({db, params}) => await dbGet({db, sql:getAPITkSQL, params}));
 export const dbUpdateAPITk = useDb(async ({db, params}) => await dbRun({db, sql:UpdateAPITkSQL, params}));
+export const dbRemUser = useDb(async ({db, params}) => await dbRun({db, sql:deleteUserSQL, params}));

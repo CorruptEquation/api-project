@@ -1,8 +1,8 @@
 import express from "express";
 import bcrypt from "bcrypt";
 
-import { dbGetUser, dbInsertUser } from "../database/dbMethods.js";
-import { genAccessToken, genRefreshToken } from "../utils/jwtMethods.js";
+import { dbGetUser, dbInsertUser, dbRemUser } from "../database/dbMethods.js";
+import { genAccessToken, genRefreshToken, verifyRefreshTk } from "../utils/jwtMethods.js";
 import { encryptDeterministic } from "../utils/aesMethods.js";
 import { getAPIToken } from "../utils/apiTokenMethods.js"
 import { redis } from "../redis.js";
@@ -22,6 +22,7 @@ router.post("/api/auth", async (req, res) => {
     // TODO: Create posts and post routes
     // TODO: Send JSON message with status codes
     // TODO: Rewrite source code in TypeScript
+    // TODO: Rate limiting
 
     const encryptedEmail = encryptDeterministic(email, "email");
     const user = await dbGetUser(encryptedEmail);
@@ -70,3 +71,14 @@ router.delete("/api/logout", async (req, res) => {
 }); 
 
 // TODO: Delete account
+router.delete("/api/account", async (req, res) => {
+  const refreshTk = req.body.token;
+  if (!refreshTk) return res.sendStatus(400);
+
+  await redis.del(refreshTk);
+
+  try{ dbRemUser(verifyRefreshTk(refreshTk)); }
+  catch(e) { return }
+
+  return res.sendStatus(200);
+})

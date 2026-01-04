@@ -1,4 +1,4 @@
 database/dbLogs.js
 node_modules
-database/database.db
+database/database/database.db
 # .env

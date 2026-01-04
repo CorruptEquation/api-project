@@ -4,3 +4,4 @@ export const getUserSQL = "SELECT * FROM users WHERE email=?";
 export const insertUserSQL = "INSERT INTO users (email, password) VALUES (?, ?)";
 export const getAPITkSQL = "SELECT APIToken FROM users WHERE email=?";
 export const UpdateAPITkSQL = "UPDATE users SET APIToken = ? WHERE email = ?";
+export const deleteUserSQL = "DELETE FROM users WHERE email=?";
