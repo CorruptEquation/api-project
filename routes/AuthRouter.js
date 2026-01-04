@@ -19,7 +19,6 @@ router.post("/api/auth", async (req, res) => {
     if (!["signup", "login"].includes(mode)) return res.sendStatus(400);
     // TODO: Email and pw format validity (client should handle bad formats before sending the request on login/signup. On login, the error message should just say that all account creds are incorrect (400) if at least one invalid format is present. Formats need to be specified in API docs).
 
-    // TODO: Implement refresh tokens and rotation
     // TODO: Implement API tokens verification to access posts
     // TODO: Send JSON message with status codes
 
@@ -46,9 +45,11 @@ router.post("/api/auth", async (req, res) => {
       res.status(200); // OK
     }
     resJsonObj.accessToken = genAccessToken(encryptedEmail);
+
     const refreshToken = genRefreshToken(encryptedEmail);
     resJsonObj.refreshToken = refreshToken;
-    await redis.sAdd("refresh-tokens", refreshToken);
+    await redis.set(refreshToken, "refresh", { EX: process.env.REFRESH_TOKEN_EXP_SEC }); // Add refresh token to cache
+
     res.json(resJsonObj);
     return res.send();
   } catch (err) {
