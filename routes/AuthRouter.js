@@ -19,8 +19,9 @@ router.post("/api/auth", async (req, res) => {
     if (!["signup", "login"].includes(mode)) return res.sendStatus(400);
     // TODO: Email and pw format validity (client should handle bad formats before sending the request on login/signup. On login, the error message should just say that all account creds are incorrect (400) if at least one invalid format is present. Formats need to be specified in API docs).
 
-    // TODO: Implement API tokens verification to access posts
+    // TODO: Create posts and post routes
     // TODO: Send JSON message with status codes
+    // TODO: Rewrite source code in TypeScript
 
     const encryptedEmail = encryptDeterministic(email, "email");
     const user = await dbGetUser(encryptedEmail);
@@ -58,12 +59,14 @@ router.post("/api/auth", async (req, res) => {
   }
 });
 
-// TODO: Logout route
-/* // Logout
-router.patch("/api/logout", authSessionToken, (_, res) => {
-  return res
-    .status(200)
-    
-    .end();
-});
- */
+// Logout
+router.delete("/api/logout", async (req, res) => {
+  const refreshTk = req.body.token;
+  if (!refreshTk) return res.sendStatus(400);
+
+  await redis.del(refreshTk);
+  
+  return res.sendStatus(200);
+}); 
+
+// TODO: Delete account
