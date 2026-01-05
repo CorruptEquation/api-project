@@ -14,6 +14,7 @@ import { resBody } from "../utils/utils.js";
 
 export const router = express.Router();
 
+// Signup
 router.post("/api/signup", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -33,6 +34,7 @@ router.post("/api/signup", async (req, res) => {
   }
 })
 
+// Login
 router.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;

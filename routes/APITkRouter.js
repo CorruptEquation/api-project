@@ -9,12 +9,10 @@ export const router = express.Router();
 // Get API Token
 router.get("/api/apitk", authAccessToken, async (req, res) => {
   try {
-    const encryptedEmail = req.user.encryptedEmail;
+    const { encryptedEmail } = req.user;
     const APIToken = await getAPIToken(encryptedEmail);
-    
-    res.json(APIToken ? {APIToken: APIToken} : {message: "You don't have an API token generated."})
 
-    return res.status(200).send();
+    return res.status(200).json(APIToken ? { APIToken: APIToken } : { "Response": "You don't have an API token generated" });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Internal server error" });
@@ -24,12 +22,12 @@ router.get("/api/apitk", authAccessToken, async (req, res) => {
 // Generate API Token
 router.patch("/api/apitk", authAccessToken, async (req, res) => {
   try {
-    const encryptedEmail = req.user.encryptedEmail;
+    const { encryptedEmail } = req.user;
     const encryptedAPIToken = genEncryptedAPItk();
 
     await dbUpdateAPITk([encryptedAPIToken, encryptedEmail]);
     
-    return res.sendStatus(200);
+    return res.status(200).json({ "Response": "API token generated" });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Internal server error" });
