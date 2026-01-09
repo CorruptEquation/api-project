@@ -1,4 +1,4 @@
-import { encryptDeterministic, decryptDeterministic } from "./aesMethods.js";
+import { encryptDeterministic, decryptDeterministic } from "./aesMethods.mjs";
 import { dbGetAPITk } from "../database/dbMethods.js";
 import crypto from "crypto";
 

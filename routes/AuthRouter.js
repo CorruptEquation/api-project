@@ -7,8 +7,8 @@ import express from "express";
 import bcrypt from "bcrypt";
 
 import { dbGetUser, dbInsertUser, dbRemUser } from "../database/dbMethods.js";
-import { verifyRefreshTk } from "../utils/jwtMethods.js";
-import { encryptDeterministic } from "../utils/aesMethods.js";
+import { verifyRefreshTk } from "../utils/jwtMethods.mjs";
+import { encryptDeterministic } from "../utils/aesMethods.mjs";
 import { redis } from "../redis.js";
 import { resBody } from "../utils/utils.js";
 

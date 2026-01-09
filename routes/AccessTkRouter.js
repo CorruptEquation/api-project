@@ -1,8 +1,7 @@
 import express from "express";
 
-import { genAccessToken, genRefreshToken } from "../utils/jwtMethods.js";
+import { verifyRefreshTk, genAccessToken, genRefreshToken } from "../utils/jwtMethods.mjs";
 import { redis } from "../redis.js";
-import { verifyRefreshTk } from "../utils/jwtMethods.js";
 
 export const router = express.Router();
 

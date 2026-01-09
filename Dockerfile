@@ -2,12 +2,13 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json .
+COPY package.json package-lock.json ./
 
 ARG NODE_ENV
-RUN if [ "$NODE_ENV" = "development" ]; \
-        then npm ci; \
-        else npm ci --omit=dev; \
+RUN if [ "$NODE_ENV" = "development" ]; then \
+	apk add --no-cache bash inotify-tools jq curlie && \
+	npm ci; \
+    else npm ci --omit=dev; \
     fi
 
 COPY . .

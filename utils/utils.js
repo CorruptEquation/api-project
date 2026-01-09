@@ -1,6 +1,6 @@
 import { getAPIToken } from "../utils/apiTokenMethods.js"
 import { redis } from "../redis.js";
-import { genAccessToken, genRefreshToken } from "./jwtMethods.js";
+import { genAccessToken, genRefreshToken } from "./jwtMethods.mjs";
 
 export async function resBody(encryptedEmail, msg) {
   const APIToken = await getAPIToken(encryptedEmail);
