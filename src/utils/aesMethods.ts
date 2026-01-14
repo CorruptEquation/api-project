@@ -5,14 +5,17 @@ import crypto from "crypto";
 const alg = "aes-256-ctr";
 const IV = Buffer.alloc(16, 0);
 
-function getKey(keyType) {
+type key = "email" | "apiToken" 
+
+function getKey(keyType: key): Buffer {
     if(keyType === "email")
-        return Buffer.from(process.env.AES_KEY_USER_EMAIL, "hex");
+        return Buffer.from(process.env.AES_KEY_USER_EMAIL!, "hex");
     else if(keyType === "apiToken")
-        return Buffer.from(process.env.AES_KEY_USER_APITOKEN, "hex");
+        return Buffer.from(process.env.AES_KEY_USER_APITOKEN!, "hex");
+	else throw new Error(`Unknown key type: ${keyType}`);
 }
 
-export function encryptDeterministic(txt, keyType) {
+export function encryptDeterministic(txt: string, keyType: key): string {
     const cipher = crypto.createCipheriv(alg, getKey(keyType), IV);
     const encrypted = Buffer.concat([
         cipher.update(txt, "utf8"),
@@ -22,7 +25,7 @@ export function encryptDeterministic(txt, keyType) {
     return encrypted.toString("hex");
 }
 
-export function decryptDeterministic(txt, keyType) {
+export function decryptDeterministic(txt: string, keyType: key): string {
     const data = Buffer.from(txt, "hex");
     const decipher = crypto.createDecipheriv(alg, getKey(keyType), IV);
     const decrypted = Buffer.concat([

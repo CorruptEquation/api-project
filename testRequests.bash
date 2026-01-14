@@ -6,10 +6,11 @@ parseResponse() {
 }
 
 verifyTk() {
-	if [ "$(node --input-type=module -e " \
-		import { decryptDeterministic } from './utils/aesMethods.mjs';
-		import { verify$1Tk } from './utils/jwtMethods.mjs';
-		console.log(decryptDeterministic(verify$1Tk('$2'), 'email'))")" == "$3" ]; then echo "OK"; else echo "NO"; fi
+	if [ "$("./node_modules/.bin/tsx" -e " \
+		import { decryptDeterministic } from './src/utils/aesMethods';
+		import { verify$1Tk } from './src/utils/jwtMethods';
+		const payload = verify$1Tk('$2');
+		console.log(decryptDeterministic(payload.encryptedEmail, 'email'))")" == "$3" ]; then echo "OK"; else echo "NO"; fi
 }
 
 # Signup Test

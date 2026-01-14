@@ -2,14 +2,9 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
-ARG NODE_ENV
-RUN if [ "$NODE_ENV" = "development" ]; then \
-	apk add --no-cache bash inotify-tools jq curlie && \
-	npm ci; \
-    else npm ci --omit=dev; \
-    fi
+RUN apk add --no-cache bash inotify-tools jq curlie && npm ci
 
 COPY . .
 
@@ -17,4 +12,5 @@ ENV PORT 3000
 
 EXPOSE $PORT
 
+# Overridden in docker-compose
 CMD ["npm", "start"]

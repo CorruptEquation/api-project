@@ -1,19 +1,12 @@
-version: "3"
 services:
   node-app:
-    build:
-      context: .
-      args:
-        NODE_ENV: development
+    build: .
     ports:
-      - "9229:9229"
+      - "9229:9229" # Debugger port mapping
     volumes:
-      - ./:/app:cached
+      - ./:/app:cached  # :cached for Windows
       - /app/node_modules
-    environment:
-      - NODE_ENV=development
-    # command: npm run dev
-    command: npm run debug
+    command: npm run dev
 
   redis-cache:
     ports:

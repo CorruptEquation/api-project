@@ -1,18 +1,23 @@
 // TODO: Create posts and post routes
-// TODO: Send JSON message with status codes
 // TODO: Rewrite source code in TypeScript
 // TODO: Rate limiting
 
 import express from "express";
 import bcrypt from "bcrypt";
 
-import { dbGetUser, dbInsertUser, dbRemUser } from "../database/dbMethods.js";
-import { verifyRefreshTk } from "../utils/jwtMethods.mjs";
-import { encryptDeterministic } from "../utils/aesMethods.mjs";
-import { redis } from "../redis.js";
-import { resBody } from "../utils/utils.js";
+import { dbGetUser, dbInsertUser, dbRemUser } from "../db/dbMethods";
+import { verifyRefreshTk } from "../utils/jwtMethods";
+import { encryptDeterministic } from "../utils/aesMethods";
+import { redis } from "../redis";
+import { resBody } from "../utils/utils";
 
 export const router = express.Router();
+
+export interface DbUser {
+  id: number;
+  encryptedEmail: string;
+  hashPw: string;
+}
 
 // Signup
 router.post("/api/signup", async (req, res) => {
@@ -25,7 +30,7 @@ router.post("/api/signup", async (req, res) => {
     const user = await dbGetUser(encryptedEmail);
     if (user) return res.status(409).json({ "Response": "Account already attached to this email" });
     const hashPw = await bcrypt.hash(password, 12);
-    await dbInsertUser([encryptedEmail, hashPw]);
+    await dbInsertUser(encryptedEmail, hashPw);
 
     return res.status(201).json(await resBody(encryptedEmail, "Account created successfully"));
   } catch (err) {
@@ -45,7 +50,7 @@ router.post("/api/login", async (req, res) => {
     const user = await dbGetUser(encryptedEmail);
     if (!user) return res.status(400).json({ "Response": "Invalid credentials" });
 
-    const validPw = await bcrypt.compare(password, user.password);
+    const validPw = await bcrypt.compare(password, user.hashPw);
     if (!validPw) return res.status(400).json({ "Response": "Invalid credentials" });
 
     return res.status(200).json(await resBody(encryptedEmail, "Login successful"));
@@ -78,7 +83,11 @@ router.delete("/api/account", async (req, res) => {
 
     await redis.del(refreshTk);
 
-    try { await dbRemUser(verifyRefreshTk(refreshTk)); }
+    try {
+	  const payload = verifyRefreshTk(refreshTk);
+	  if (typeof(payload) !== "string")
+		await dbRemUser(payload.encryptedEmail);
+	}
     catch(e) { return }
 
     return res.status(200).json({ "Response": "Account deleted successfully" });
