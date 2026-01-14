@@ -81,7 +81,7 @@ router.delete("/api/account", async (req, res) => {
     const refreshTk = req.body.token;
     if (!refreshTk) return res.status(400).json({ "Response": "No token inside request body" });
 
-    await redis.del(refreshTk);
+    await redis.del(refreshTk); // TODO: Should delete all refresh tokens linked
 
     try {
 	  const payload = verifyRefreshTk(refreshTk);
