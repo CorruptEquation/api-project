@@ -1,18 +1,13 @@
-version: "3"
 services:
   node-app:
     build:
       context: .
-      args:
-        NODE_ENV: production
-    environment:
-    - NODE_ENV=production
+      target: prod
     volumes:
-      - sqlite-data:/app/database/database
+      - sqlite-data:/app/database
     command: npm start
 
   redis-cache:
-    image: redis:alpine
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes --appendfsync everysec --save 900 1 --save 300 10 --save 60 10000

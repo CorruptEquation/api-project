@@ -1,22 +1,22 @@
 // TODO: Create posts and post routes
-// TODO: Rewrite source code in TypeScript
 // TODO: Rate limiting
 
 import express from "express";
 import bcrypt from "bcrypt";
 
-import { dbGetUser, dbInsertUser, dbRemUser } from "../db/dbMethods";
-import { verifyRefreshTk } from "../utils/jwtMethods";
-import { encryptDeterministic } from "../utils/aesMethods";
-import { redis } from "../redis";
-import { resBody } from "../utils/utils";
+import { dbGetUser, dbInsertUser, dbRemUser } from "../db/dbMethods.js";
+import { verifyRefreshTk } from "../utils/jwtMethods.js";
+import { encryptDeterministic } from "../utils/aesMethods.js";
+import { redis } from "../redis.js";
+import { resBody } from "../utils/utils.js";
 
 export const router = express.Router();
 
 export interface DbUser {
   id: number;
-  encryptedEmail: string;
-  hashPw: string;
+  email: string;
+  password: string;
+  APIToken?: null | string
 }
 
 // Signup
@@ -49,8 +49,7 @@ router.post("/api/login", async (req, res) => {
     const encryptedEmail = encryptDeterministic(email, "email");
     const user = await dbGetUser(encryptedEmail);
     if (!user) return res.status(400).json({ "Response": "Invalid credentials" });
-
-    const validPw = await bcrypt.compare(password, user.hashPw);
+    const validPw = await bcrypt.compare(password, user.password);
     if (!validPw) return res.status(400).json({ "Response": "Invalid credentials" });
 
     return res.status(200).json(await resBody(encryptedEmail, "Login successful"));

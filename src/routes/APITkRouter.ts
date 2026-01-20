@@ -1,8 +1,8 @@
 import express from "express";
 
-import { authAccessToken } from "../middleware/jwtMiddleware";
-import { getAPIToken, genEncryptedAPItk } from "../utils/apiTokenMethods"
-import { dbUpdateAPITk } from "../db/dbMethods";
+import { authAccessToken } from "../middleware/jwtMiddleware.js";
+import { getAPIToken, genEncryptedAPItk } from "../utils/apiTokenMethods.js"
+import { dbUpdateAPITk } from "../db/dbMethods.js";
 
 export const router = express.Router();
 

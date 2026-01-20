@@ -1,12 +1,12 @@
-import './configENV';
+import './configENV.js';
 import express from "express";
 import cors from "cors";
 
 // Import routes
-import { router as authRouter } from "./routes/AuthRouter";
-import { router as APITokenRouter } from "./routes/APITkRouter"
-import { router as accessTkRouter } from './routes/AccessTkRouter';
-import { dbInit } from "./db/dbMethods"; 
+import { router as authRouter } from "./routes/AuthRouter.js";
+import { router as APITokenRouter } from "./routes/APITkRouter.js"
+import { router as accessTkRouter } from './routes/AccessTkRouter.js';
+import { dbInit } from "./db/dbMethods.js"; 
 
 
 

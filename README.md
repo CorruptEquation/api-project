@@ -13,8 +13,8 @@
 **Required parameters:** email, password<br>
 
 ### Login User *(/api/login)*
-**POST:** Returns access and refresh JWTs<br>
-**Required parameters:** email, password, API token (optional)<br>
+**POST:** Returns access and refresh JWTs, API token (optional) <br>
+**Required parameters:** email, password<br>
 
 ### Get/Generate API token *(/api/apitk)*
 **GET:** Returns API token<br>
@@ -35,12 +35,7 @@
 **Required parameters:** token(refresh JWT)<br>
 
 ## How to run
-### Docker
-Development start: `docker-compose -f docker-compose.yaml -f docker-compose-dev.yaml up --build`<br>
-Development stop: `docker-compose -f docker-compose.yaml -f docker-compose-dev.yaml down -v`<br>
-Production start: `docker-compose -f docker-compose.yaml -f docker-compose-prod.yaml up --build`<br>
-Production stop: `docker-compose -f docker-compose.yaml -f docker-compose-prod.yaml down`
-
-### npm
-Development: `npm run dev`
-Production: `npm start`
+**Windows prerequisites:** Make sure you have a way to run bash scripts (WSL / git bash / etc.)
+**Docker prerequisites:** Make sure you have docker installed
+**Start:** `./run.bash {dev|prod}`
+**Stop:** `./exit.bash {dev|prod}` 

@@ -8,11 +8,11 @@
     "removeComments": true,
     "noEmitOnError": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "es2022",
+    "module": "NodeNext",
     "target": "es2020",
     "types": [],
     // For nodejs:

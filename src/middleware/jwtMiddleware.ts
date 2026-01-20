@@ -1,5 +1,5 @@
-import { verifyAccessTk } from "../utils/jwtMethods";
-import { TokenPayload } from "../utils/jwtMethods";
+import { verifyAccessTk } from "../utils/jwtMethods.js";
+import { TokenPayload } from "../utils/jwtMethods.js";
 import { RequestHandler } from "express";
 
 export const authAccessToken: RequestHandler = (req, res, next) => {

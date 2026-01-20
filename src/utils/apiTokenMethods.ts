@@ -1,5 +1,5 @@
-import { encryptDeterministic, decryptDeterministic } from "./aesMethods";
-import { dbGetAPITk } from "../db/dbMethods";
+import { encryptDeterministic, decryptDeterministic } from "./aesMethods.js";
+import { dbGetAPITk } from "../db/dbMethods.js";
 import crypto from "crypto";
 
 // Get decrypted API token

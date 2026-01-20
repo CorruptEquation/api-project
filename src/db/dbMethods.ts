@@ -6,10 +6,9 @@ import { DbUser } from "../routes/AuthRouter.js";
 sqlite3.verbose();
 
 const dbName = process.env.DB_PATH!;
-
 // Promisifying methods
 
-type paramsType = undefined | readonly [string] | [string, string];
+type paramsType = undefined | [string] | [string, string];
 
 interface paramsDbType {
   params?: paramsType;
@@ -95,7 +94,7 @@ export const dbInit = useDb(async ({db}) => {
 });
 
 export const dbGetUser = (email: string): Promise<DbUser | undefined>  => 
-  useDb<DbUser>(({ db, params }) => dbGet<DbUser>({ db, sql:getUserSQL, params }))([email]);
+  useDb<DbUser>(({ db, params }: paramsDbType) => dbGet<DbUser>({ db, sql:getUserSQL, params }))([email]);
 
 export const dbInsertUser = (email: string, pw: string): Promise<void> =>
   useDb(({ db, params }: paramsDbType) => dbRun({ db, sql:insertUserSQL, params }))([email, pw]);
