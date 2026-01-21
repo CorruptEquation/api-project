@@ -14,7 +14,7 @@ router.post("/api/refresh-tk", async (req, res) => {
 
     if (!await redis.exists(refreshTk)) return res.status(403).json({ "Response": "Invalid token" });
 
-    let encryptedEmail: string;
+    let encryptedEmail: string = "";
     try{
 	  const payload = verifyRefreshTk(refreshTk);
 	  if (typeof(payload) !== "string")
@@ -22,15 +22,15 @@ router.post("/api/refresh-tk", async (req, res) => {
 	}
     catch(e) { return res.status(403).json({ "Response": "Invalid token" }); }
     
-	const accessTk = genAccessToken({ encryptedEmail: encryptedEmail! }) // Generate another access token
+	const accessTk = genAccessToken({ encryptedEmail }) // Generate another access token
     await redis.del(refreshTk); // Remove previous refresh token
-    const regenRefreshTk = genRefreshToken({ encryptedEmail: encryptedEmail! }); // Regenerate refresh token
+    const regenRefreshTk = genRefreshToken({ encryptedEmail }); // Regenerate refresh token
     await redis.set(regenRefreshTk, "refresh", { EX: Number(process.env.REFRESH_TOKEN_EXP_SEC) }); // Add refresh token to cache
 
     return res.status(200).json({
         "Response": "Token refreshed",
-        refreshTk: regenRefreshTk,
-        accessTk: accessTk
+        refreshToken: regenRefreshTk,
+        accessToken: accessTk
       });
   } catch (err) {
     console.log(err);

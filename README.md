@@ -38,4 +38,4 @@
 **Windows prerequisites:** Make sure you have a way to run bash scripts (WSL / git bash / etc.)
 **Docker prerequisites:** Make sure you have docker installed
 **Start:** `./run.bash {dev|prod}`
-**Stop:** `./exit.bash {dev|prod}` 
+**Stop:** `./exit.bash` 

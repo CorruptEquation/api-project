@@ -6,6 +6,8 @@ services:
     volumes:
       - sqlite-data:/app/database
     command: npm start
+    environment:
+      - ENV=prod
 
   redis-cache:
     volumes:

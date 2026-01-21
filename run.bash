@@ -6,7 +6,7 @@ if [[ "$1" != "dev" && "$1" != "prod" ]]; then
 fi
 
 docker info > /dev/null 2>&1 || {
-  #echo "Docker is not running. Enter password to start Docker.";
+  echo "Docker is not running. Enter password to start Docker.";
   sudo systemctl start docker;
 }
 
